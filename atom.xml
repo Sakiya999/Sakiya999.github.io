@@ -6,7 +6,7 @@
   <link href="http://sakiya.top/atom.xml" rel="self"/>
   
   <link href="http://sakiya.top/"/>
-  <updated>2022-06-15T07:00:30.684Z</updated>
+  <updated>2022-06-16T14:09:18.481Z</updated>
   <id>http://sakiya.top/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Solana账号地址转换</title>
+    <link href="http://sakiya.top/2022/06/16/solana-account-convert/"/>
+    <id>http://sakiya.top/2022/06/16/solana-account-convert/</id>
+    <published>2022-06-16T13:46:44.000Z</published>
+    <updated>2022-06-16T14:09:18.481Z</updated>
+    
+    <content type="html"><![CDATA[<p>Solana 账号地址有多种表示方式，钱包和solscan上看到的一般是这种形式：<br /><strong>Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB</strong></p><p>而用solana的web3.js库来生成的账号的话：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> web3 = <span class="built_in">require</span>(<span class="string">&#x27;@solana/web3.js&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> account = web3.<span class="property">Keypair</span>.<span class="title function_">generate</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;account:&quot;</span>, account)</span><br></pre></td></tr></table></figure><p>结果是这样的：</p><blockquote><p>account: Keypair {</p><p>_keypair: {</p><p>publicKey: Uint8Array(32) [</p><p>156, 43, 124, 173, 206, 237, 208,  7,</p><p>190, 155, 53, 17, 32, 162, 249, 149,</p><p>​    23,  5, 175, 121, 108, 35, 19, 47,</p><p>155, 224, 138,  4, 62,  4, 54, 118</p><p>],</p><p>secretKey: Uint8Array(64) [</p><p>​    79, 206, 135,  1, 237, 132, 132, 64, 32, 175, 29,</p><p>​    69, 175, 166, 41, 124, 170, 120, 225, 16, 140,  8,</p><p>125, 136, 37, 145, 114, 177, 220, 25, 203, 190, 156,</p><p>​    43, 124, 173, 206, 237, 208,  7, 190, 155, 53, 17,</p><p>​    32, 162, 249, 149, 23,  5, 175, 121, 108, 35, 19,</p><p>​    47, 155, 224, 138,  4, 62,  4, 54, 118</p><p>]</p><p>}</p><p>}</p></blockquote><p>二者转换并不难，只要知道它是如何编码的，solana的地址采用的是base58编码，比特币用的就是这种方式。</p><p>可以直接使用bs58的库来进行转化，代码如下：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> web3 = <span class="built_in">require</span>(<span class="string">&#x27;@solana/web3.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> bs58 = <span class="built_in">require</span>(<span class="string">&#x27;bs58&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> account = web3.<span class="property">Keypair</span>.<span class="title function_">generate</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;account:&quot;</span>, account)</span><br><span class="line"><span class="comment">// bytes to base58</span></span><br><span class="line"><span class="keyword">let</span> private_key = bs58.<span class="title function_">encode</span>(account.<span class="property">secretKey</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;private_key:&quot;</span>, private_key);</span><br><span class="line"><span class="comment">// base68 to bytes</span></span><br><span class="line"><span class="keyword">const</span> decoded_key = bs58.<span class="title function_">decode</span>(private_key);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;decoded_key:&quot;</span>, decoded_key);</span><br><span class="line"><span class="keyword">let</span> account_restore = <span class="keyword">new</span> web3.<span class="title class_">Account</span>(decoded_key);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;account_restore:&quot;</span>, account_restore)</span><br></pre></td></tr></table></figure><p>结果如下：</p><blockquote><p>account: Keypair {</p><p>_keypair: {</p><p>publicKey: Uint8Array(32) [</p><p>188, 157, 166, 231, 52, 155, 151, 249,</p><p>186, 174, 13, 79, 29, 19, 203, 55,</p><p>​    64, 97, 209, 231, 17,  1, 90, 129,</p><p>177, 34, 238, 137, 76, 190, 175, 114</p><p>],</p><p>secretKey: Uint8Array(64) [</p><p>251, 166, 106, 213, 81, 158, 129, 72, 55, 59, 204,</p><p>113, 209, 241, 255, 209, 16, 69, 217, 91, 216, 177,</p><p>152, 187, 66,  3, 210, 39, 251, 109, 206, 11, 188,</p><p>157, 166, 231, 52, 155, 151, 249, 186, 174, 13, 79,</p><p>​    29, 19, 203, 55, 64, 97, 209, 231, 17,  1, 90,</p><p>129, 177, 34, 238, 137, 76, 190, 175, 114</p><p>]</p><p>}</p><p>}</p><p>private_key: 62pGE5gVtL82roxrtQC2Hn5aaWLan9CQ64bwm76pQTdy8L4n9mxDqqEu7xHqZuYZCjxcLf47rwT4H1SEHEhFr7X7</p><p>decoded_key: Uint8Array(64) [</p><p>251, 166, 106, 213, 81, 158, 129, 72, 55, 59, 204,</p><p>113, 209, 241, 255, 209, 16, 69, 217, 91, 216, 177,</p><p>152, 187, 66,  3, 210, 39, 251, 109, 206, 11, 188,</p><p>157, 166, 231, 52, 155, 151, 249, 186, 174, 13, 79,</p><p>29, 19, 203, 55, 64, 97, 209, 231, 17,  1, 90,</p><p>129, 177, 34, 238, 137, 76, 190, 175, 114</p><p>]</p><p>account_restore: Account {</p><p>_keypair: {</p><p>publicKey: Uint8Array(32) [</p><p>188, 157, 166, 231, 52, 155, 151, 249,</p><p>186, 174, 13, 79, 29, 19, 203, 55,</p><p>​    64, 97, 209, 231, 17,  1, 90, 129,</p><p>177, 34, 238, 137, 76, 190, 175, 114</p><p>],</p><p>secretKey: Uint8Array(64) [</p><p>251, 166, 106, 213, 81, 158, 129, 72, 55, 59, 204,</p><p>113, 209, 241, 255, 209, 16, 69, 217, 91, 216, 177,</p><p>152, 187, 66,  3, 210, 39, 251, 109, 206, 11, 188,</p><p>157, 166, 231, 52, 155, 151, 249, 186, 174, 13, 79,</p><p>​    29, 19, 203, 55, 64, 97, 209, 231, 17,  1, 90,</p><p>129, 177, 34, 238, 137, 76, 190, 175, 114</p><p>]</p><p>}</p><p>}</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Solana 账号地址有多种表示方式，钱包和solscan上看到的一般是这种形式：&lt;br /&gt;
+&lt;strong&gt;Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;而用solana的web3.js库来生成</summary>
+      
+    
+    
+    
+    <category term="区块链" scheme="http://sakiya.top/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/"/>
+    
+    
+    <category term="Solana" scheme="http://sakiya.top/tags/Solana/"/>
+    
+    <category term="区块链" scheme="http://sakiya.top/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/"/>
+    
+  </entry>
   
   <entry>
     <title>新博客开张</title>
