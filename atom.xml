@@ -6,7 +6,7 @@
   <link href="http://sakiya.top/atom.xml" rel="self"/>
   
   <link href="http://sakiya.top/"/>
-  <updated>2022-07-04T08:49:53.115Z</updated>
+  <updated>2022-07-06T08:23:21.905Z</updated>
   <id>http://sakiya.top/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Node.js使用代理访问websocket</title>
+    <link href="http://sakiya.top/2022/07/06/nodejs-ws-proxy/"/>
+    <id>http://sakiya.top/2022/07/06/nodejs-ws-proxy/</id>
+    <published>2022-07-06T08:15:35.000Z</published>
+    <updated>2022-07-06T08:23:21.905Z</updated>
+    
+    <content type="html"><![CDATA[<p>为了在websocket中使用代理访问，需要使用 <strong>https-proxy-agent</strong> 包，安装方式如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install https-proxy-agent</span><br></pre></td></tr></table></figure><p>接下来是示例代码：</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> url = <span class="built_in">require</span>(<span class="string">&#x27;url&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">WebSocket</span> = <span class="built_in">require</span>(<span class="string">&#x27;ws&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">HttpsProxyAgent</span> = <span class="built_in">require</span>(<span class="string">&#x27;https-proxy-agent&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 填入你的代理</span></span><br><span class="line"><span class="keyword">var</span> proxy = <span class="string">&#x27;http://localhost:7890&#x27;</span>;</span><br><span class="line"><span class="comment">// 需要访问的websocket地址</span></span><br><span class="line"><span class="keyword">var</span> endpoint = <span class="string">&#x27;ws://echo.websocket.org&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> options = url.<span class="title function_">parse</span>(proxy);</span><br><span class="line"><span class="keyword">var</span> agent = <span class="keyword">new</span> <span class="title class_">HttpsProxyAgent</span>(options);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用proxy agent 初始化websocket</span></span><br><span class="line"><span class="keyword">var</span> ws_client = <span class="keyword">new</span> <span class="title class_">WebSocket</span>(endpoint, &#123; <span class="attr">agent</span>: agent &#125;);</span><br><span class="line"></span><br><span class="line">ws_client.<span class="title function_">on</span>(<span class="string">&#x27;open&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;&quot;open&quot; event!&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">ws_client.<span class="title function_">on</span>(<span class="string">&#x27;message&#x27;</span>, <span class="keyword">function</span> (<span class="params">data, flags</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;&quot;message&quot; event! %j %j&#x27;</span>, data, flags);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;为了在websocket中使用代理访问，需要使用 &lt;strong&gt;https-proxy-agent&lt;/strong&gt; 包，安装方式如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;</summary>
+      
+    
+    
+    
+    <category term="nodejs" scheme="http://sakiya.top/categories/nodejs/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Solana中Approve和Revoke</title>
