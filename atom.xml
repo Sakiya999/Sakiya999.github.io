@@ -6,7 +6,7 @@
   <link href="http://sakiya.top/atom.xml" rel="self"/>
   
   <link href="http://sakiya.top/"/>
-  <updated>2022-07-06T08:23:21.905Z</updated>
+  <updated>2022-07-12T02:55:45.778Z</updated>
   <id>http://sakiya.top/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Docker访问宿主机及容器间访问</title>
+    <link href="http://sakiya.top/2022/07/12/docker-network/"/>
+    <id>http://sakiya.top/2022/07/12/docker-network/</id>
+    <published>2022-07-12T02:30:54.000Z</published>
+    <updated>2022-07-12T02:55:45.778Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="使用宿主机ip访问"><a class="markdownIt-Anchor" href="#使用宿主机ip访问"></a> 使用宿主机IP访问</h3><p>docker容器运行的时候会默认使用bridge网络模式，安装一个虚拟网卡docker0，将宿主机网络与容器网络分隔开。</p><p>在不同系统中，网卡ip不同。在docker内部可以使用特殊的域名访问宿主机：</p><blockquote><p>host.docker.internal</p></blockquote><p>docker中的DNS会自动解析到宿主机IP。</p><h3 id="使用host网络"><a class="markdownIt-Anchor" href="#使用host网络"></a> 使用host网络</h3><p>另外，也可以使用host网络配置，使用该模式容器将直接使用宿主机网络，不存在网络隔离，而且可能存在端口冲突，需要慎重使用。</p><p>可以在容器创建时使用：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name &lt;container_name&gt; --network host &lt;image_name&gt;</span><br></pre></td></tr></table></figure><p>此时不需要再做端口映射。</p><h3 id="容器间访问"><a class="markdownIt-Anchor" href="#容器间访问"></a> 容器间访问</h3><p>容器之间访问可以使用上述方法，暴露端口，利用桥接网络，通过宿主机网络访问。</p><p>另外，也可以使用network方便容器之间的访问。</p><p>假设我现在有两个容器： container1, container2</p><p>两个容器需要互相访问，首先创建一个network：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create test-net</span><br></pre></td></tr></table></figure><p>然后将两个容器都连接到该网络</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker network connect container1</span><br><span class="line">docker network connect container2</span><br></pre></td></tr></table></figure><p>接下来再容器中，可以通过容器名(container1, container2)或容器ID直接访问对应网络。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;使用宿主机ip访问&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#使用宿主机ip访问&quot;&gt;&lt;/a&gt; 使用宿主机IP访问&lt;/h3&gt;
+&lt;p&gt;docker容器运行的时候会默认使用bridge网络模式，安装一个虚拟网卡docker0，将宿主机网络</summary>
+      
+    
+    
+    
+    <category term="Docker" scheme="http://sakiya.top/categories/Docker/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>Node.js使用代理访问websocket</title>
